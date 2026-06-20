@@ -62,7 +62,7 @@ TOCTOU race condition at the application level.
 
 The correct fix pushes the uniqueness guarantee down to the database layer:
 
-INSERT INTO idempotency_keys (key, ...) VALUES (...) ON CONFLICT (key) DO NOTHING
+```INSERT INTO idempotency_keys (key, ...) VALUES (...) ON CONFLICT (key) DO NOTHING```
 
 Since key is a PRIMARY KEY, Postgres enforces uniqueness atomically. No two
 requests can both win this insert simultaneously — it is physically impossible.
@@ -75,20 +75,22 @@ No mutexes, no application-level locks, no distributed coordination needed.
 Prerequisites: Go 1.21+, Docker
 
 1. Start Postgres:
+   ```
    docker run --name payment-db -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin123
    -e POSTGRES_DB=paymentdb -p 5432:5432 -d postgres
+   ```
 
 2. Run schema:
-   docker exec -it payment-db psql -U admin -d paymentdb -f schema.sql
+   ```docker exec -it payment-db psql -U admin -d paymentdb -f schema.sql```
 
 3. Start the server:
-   go run main.go
+   ```go run main.go```
 
 Server runs on http://localhost:8080
 
 ## Running tests
 
-go test ./handler/ -v
+```go test ./handler/ -v```
 
 Tests cover:
 
